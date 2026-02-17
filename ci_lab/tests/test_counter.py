@@ -300,17 +300,9 @@ class TestCounterEndpoints:
     # Date: 2026-02-16
     # Description: Verifies GET endpoint returns correct counter value
     # ===========================
-    def test_retrieve_existing_counter_value(self, client):
-        """It should retrieve a counter and verify its exact value after increments"""
-        # Create counter
-        client.post('/counters/mytest')
-        
-        # Increment it 3 times
-        client.put('/counters/mytest')
-        client.put('/counters/mytest')
-        client.put('/counters/mytest')
-        
-        # Retrieve and verify exact value
-        response = client.get('/counters/mytest')
+    def test_retrieve_existing_counter(self, client):
+        """It should retrieve an existing counter"""
+        client.post('/counters/test_counter')
+        response = client.get('/counters/test_counter')
         assert response.status_code == HTTPStatus.OK
-        assert response.get_json()['mytest'] == 3
+        assert response.get_json() == {"test_counter": 99}  # WRONG! Should be 0
