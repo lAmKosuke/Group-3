@@ -107,6 +107,40 @@ Each test should include:
 # Student 3: Test missing required fields
 # - Ensure account initialization fails when required fields are missing.
 # Target Method: Account() initialization
+# ===========================
+# Test: Missing Required Fields
+# Author: Kosuke carlson
+# Date: 2026-2-16
+# Description: Test that account creation fails without required fields
+# ===========================
+def test_missing_required_fields():
+    """Test that creating an account without required fields raises an error"""
+    from sqlalchemy.exc import IntegrityError
+    
+    # Test missing email
+    with pytest.raises(IntegrityError):
+        account = Account(name="Test User")
+        db.session.add(account)
+        db.session.commit()
+    
+    db.session.rollback()  # Clean up failed transaction
+    
+    # Test missing name
+    with pytest.raises(IntegrityError):
+        account = Account(email="test@example.com")
+        db.session.add(account)
+        db.session.commit()
+    
+    db.session.rollback()  # Clean up failed transaction
+    
+    # Test that valid account creation works
+    valid_account = Account(name="Valid User", email="valid@example.com")
+    db.session.add(valid_account)
+    db.session.commit()
+    
+    assert valid_account.id is not None
+    assert valid_account.name == "Valid User"
+    assert valid_account.email == "valid@example.com"
 
 # Student 4: Test positive deposit
 # - Verify that depositing a positive amount correctly increases the balance.
