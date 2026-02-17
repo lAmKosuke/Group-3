@@ -293,3 +293,24 @@ class TestCounterEndpoints:
         # Invalid name with special chars should fail
         response = client.post('/counters/invalid!')
         assert response.status_code == HTTPStatus.BAD_REQUEST
+
+          # ===========================
+    # Test: Retrieve Existing Counter
+    # Author: Kosuke Carlson
+    # Date: 2026-02-16
+    # Description: Verifies GET endpoint returns correct counter value
+    # ===========================
+    def test_retrieve_existing_counter_value(self, client):
+        """It should retrieve a counter and verify its exact value after increments"""
+        # Create counter
+        client.post('/counters/mytest')
+        
+        # Increment it 3 times
+        client.put('/counters/mytest')
+        client.put('/counters/mytest')
+        client.put('/counters/mytest')
+        
+        # Retrieve and verify exact value
+        response = client.get('/counters/mytest')
+        assert response.status_code == HTTPStatus.OK
+        assert response.get_json()['mytest'] == 3
