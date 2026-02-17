@@ -293,3 +293,10 @@ class TestCounterEndpoints:
         # Invalid name with special chars should fail
         response = client.post('/counters/invalid!')
         assert response.status_code == HTTPStatus.BAD_REQUEST
+
+    def test_retrieve_existing_counter(self, client):
+        """It should retrieve an existing counter"""
+        client.post('/counters/test_counter')
+        response = client.get('/counters/test_counter')
+        assert response.status_code == HTTPStatus.OK
+        assert response.get_json() == {"test_counter": 0}  # fixed
